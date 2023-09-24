@@ -248,6 +248,81 @@ class KiteExtUtils:
         del obj
         return ret
 
+    @staticmethod
+    def validate_object_path(object_path: Union[Path, str]) -> Path:
+        return (
+            Path(
+                f"{object_path.absolute()}"
+                if ".pkl" in str(object_path.absolute())
+                else f"{object_path.absolute()}.pkl"
+            )
+            if isinstance(object_path, Path)
+            else Path(
+                Path(
+                    f"{object_path}"
+                    if object_path.find(".pkl") != -1
+                    else f"{object_path}.pkl"
+                ).absolute()  # noqa: E501
+            )  # noqa: E501
+        )
+
+    @staticmethod
+    def save_object(
+        objects: Any,
+        object_path: Union[Path, str],
+    ) -> None:
+        object_path = KiteExtUtils.validate_object_path(object_path)
+        if (
+            isinstance(object_path, Path)
+            and object_path.exists()
+            and object_path.is_file()
+        ):
+            try:
+                with open(object_path, "wb") as output_file:
+                    dump(objects, output_file, protocol=HIGHEST_PROTOCOL)
+                    print(
+                        f"{object_path} State Saved in {object_path} File"
+                    )  # noqa E501
+            except Exception as err:
+                print(
+                    f"Failed To Save {object_path} State "
+                    + f"In {object_path}.pkl File"
+                    + f"\nAnd The Exception Was: {err}"
+                )
+                raise err
+        else:
+            raise ValueError(
+                "The Object Path Should be either of type pathlib.Path or str"
+            )  # noqa: E501
+
+    @staticmethod
+    def read_object(object_path: Union[Path, str]) -> Any:
+        object_path = KiteExtUtils.validate_object_path(object_path)
+        if (
+            isinstance(object_path, Path)
+            and object_path.exists()
+            and object_path.is_file()
+        ):
+            try:
+                with open(object_path, "rb") as input_file:
+                    objects = load(input_file)
+                    print(
+                        f"{object_path} State Read From {object_path} File"
+                    )  # noqa E501
+            except Exception as err:
+                print(
+                    f"Failed To Read {object_path} State"
+                    + f"From {object_path}.pkl File"
+                    + f"\nAnd The Exception Was: {err}"
+                )
+                raise err
+            else:
+                return objects
+        else:
+            raise ValueError(
+                "The Object Path Should be either of type pathlib.Path or str"
+            )  # noqa: E501
+
 
 class ProgramKilled(Exception):
     """ProgramKilled Checks the ProgramKilled exception"""
