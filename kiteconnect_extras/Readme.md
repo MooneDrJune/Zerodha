@@ -1,6 +1,7 @@
 # Features of `kiteconnect_extras` / KiteConnect Extras On Steriod Version
 - IPC Enabled `KiteConnect` aka `KiteExt`
 - IPC Enabled `KiteTicker` aka `KiteExtTicker`
+- Previously was hosted as [gist](https://gist.github.com/MooneDrJune/402d68a26c4ef26288ad6a799b58d4b2)
 
 
     ## Additional Features of the new `KiteExt` on Steriods.
